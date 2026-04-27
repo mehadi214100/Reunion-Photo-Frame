@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>হরিপুর উচ্চ বিদ্যালয় - Photo Frame</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            /* স্ক্রলিং একদম বন্ধ */
+            overflow: hidden; 
+            touch-action: none;
+        }
+        #preview-canvas {
+            cursor: grab;
+            touch-action: none;
+        }
+        #preview-canvas:active {
+            cursor: grabbing;
+        }
+        
+        /* কাস্টম স্লাইডার ডিজাইন */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            margin-top: -7px;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.4);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 h-[100dvh] w-screen flex items-center justify-center antialiased sm:p-4">
+
+    <div class="bg-white w-full h-full sm:h-auto sm:max-h-[95vh] max-w-md flex flex-col sm:rounded-3xl shadow-2xl overflow-hidden">
+        
+        <div class="px-4 py-3 bg-white text-center border-b border-gray-100 shadow-sm shrink-0">
+            <h1 class="text-xl font-bold text-gray-800">হরিপুর উচ্চ বিদ্যালয়</h1>
+            <p class="text-[11.5px] text-gray-500 font-medium mt-0.5">ছবি বসান, পজিশন ঠিক করুন এবং ডাউনলোড করুন</p>
+        </div>
+
+        <div class="bg-gray-50 w-full flex-1 min-h-0 flex items-center justify-center p-4 border-b border-gray-100">
+            <div class="relative h-full max-h-[300px] aspect-square rounded-xl overflow-hidden shadow-inner border-2 border-dashed border-gray-300 bg-white">
+                <canvas id="preview-canvas" width="1080" height="1080" class="w-full h-full object-cover"></canvas>
+            </div>
+        </div>
+
+        <div class="px-5 py-4 flex flex-col space-y-3.5 bg-white shrink-0">
+            
+            <div>
+                <input type="file" id="image-upload" accept="image/*" class="hidden">
+                <label for="image-upload" class="cursor-pointer w-full flex items-center justify-center space-x-2 bg-indigo-50 text-indigo-700 py-2.5 rounded-xl font-semibold border border-indigo-100 hover:bg-indigo-100 transition active:scale-95 text-[14.5px]">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>আপনার ছবি নির্বাচন করুন</span>
+                </label>
+            </div>
+
+            <div class="bg-gray-50 px-4 py-2 rounded-xl border border-gray-100 flex items-center space-x-3">
+                <label for="batch-input" class="text-[13px] font-semibold text-gray-700 whitespace-nowrap">
+                    <i class="fa-solid fa-graduation-cap mr-1"></i> এসএসসি ব্যাচ:
+                </label>
+                <input type="number" id="batch-input" placeholder="যেমন: 2017" class="w-full bg-white border border-gray-200 text-gray-800 text-[14px] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block px-3 py-1.5 outline-none transition">
+            </div>
+
+            <div class="bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-100">
+                <div class="flex justify-between items-center mb-1.5">
+                    <label class="text-[13px] font-semibold text-gray-700">
+                        <i class="fa-solid fa-magnifying-glass-plus mr-1"></i> ছবি জুম করুন
+                    </label>
+                </div>
+                <input type="range" id="zoom-slider" min="0.1" max="3" step="0.05" value="1" class="w-full">
+                <p class="text-[10.5px] text-gray-400 mt-1.5 text-center font-medium">
+                    <i class="fa-solid fa-hand-pointer mr-1"></i> ডানে-বামে সরাতে ক্যানভাসের ওপর ড্র্যাগ করুন
+                </p>
+            </div>
+
+            <div class="pt-1">
+                <button id="download-btn" class="w-full flex items-center justify-center space-x-2 bg-blue-600 text-white py-3 rounded-xl font-bold text-[15.5px] shadow-md shadow-blue-600/30 hover:bg-blue-700 transition active:scale-95">
+                    <i class="fa-solid fa-download"></i>
+                    <span>ছবি ডাউনলোড করুন</span>
+                </button>
+
+                <div class="mt-3 text-center">
+                    <p class="text-[11.5px] text-gray-400 font-medium tracking-wide">
+                        &copy; Copyright <span class="text-indigo-500 font-bold">SSC - 2017</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const canvas = document.getElementById('preview-canvas');
+        const ctx = canvas.getContext('2d');
+        const uploadInput = document.getElementById('image-upload');
+        const zoomSlider = document.getElementById('zoom-slider');
+        const downloadBtn = document.getElementById('download-btn');
+        const batchInput = document.getElementById('batch-input'); // নতুন ইনপুট
+
+        let userImg = null;
+        let frameImg = new Image();
+        
+        frameImg.src = 'frame.png'; 
+
+        let scale = 1;
+        let offsetX = 0;
+        let offsetY = 0;
+        let isDragging = false;
+        let startX, startY;
+        let batchYear = ''; // ব্যাচ ইয়ার স্টোর করার জন্য
+
+        // ব্যাচ ইনপুট ইভেন্ট লিসেনার
+        batchInput.addEventListener('input', function(e) {
+            batchYear = e.target.value;
+            drawCanvas(); // টাইপ করার সাথে সাথে ক্যানভাস আপডেট হবে
+        });
+
+        uploadInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        userImg = img;
+                        scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+                        zoomSlider.value = scale;
+                        offsetX = 0; 
+                        offsetY = 0;
+                        drawCanvas();
+                    }
+                    img.src = event.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function drawCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (userImg) {
+                const scaledWidth = userImg.width * scale;
+                const scaledHeight = userImg.height * scale;
+                
+                const drawX = (canvas.width - scaledWidth) / 2 + offsetX;
+                const drawY = (canvas.height - scaledHeight) / 2 + offsetY;
+                
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(userImg, drawX, drawY, scaledWidth, scaledHeight);
+            } else {
+                ctx.fillStyle = "#f8fafc";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#94a3b8";
+                
+                ctx.font = "bold 40px 'Hind Siliguri', sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText("Upload Photo", canvas.width/2, canvas.height/2);
+            }
+
+            
+            if (frameImg.complete && frameImg.src) {
+                ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+            }
+
+           
+            if (batchYear.trim() !== '') {
+                ctx.fillStyle = "#ffffff"; 
+                
+               
+                ctx.font = "bold 45px 'Hind Siliguri', sans-serif"; 
+                ctx.textAlign = "left";
+                
+                
+                ctx.fillText(`SSC - ${batchYear}`, 50, 1040); 
+            }
+        }
+
+        zoomSlider.addEventListener('input', function(e) {
+            scale = parseFloat(e.target.value);
+            drawCanvas();
+        });
+
+        canvas.addEventListener('mousedown', function(e) {
+            if (!userImg) return;
+            isDragging = true;
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            startX = (e.clientX - rect.left) * scaleX - offsetX;
+            startY = (e.clientY - rect.top) * scaleY - offsetY;
+        });
+
+        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('mouseleave', () => isDragging = false);
+
+        canvas.addEventListener('mousemove', function(e) {
+            if (isDragging && userImg) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+
+                offsetX = ((e.clientX - rect.left) * scaleX) - startX;
+                offsetY = ((e.clientY - rect.top) * scaleY) - startY;
+                drawCanvas();
+            }
+        });
+
+        canvas.addEventListener('touchstart', function(e) {
+            if (!userImg) return;
+            isDragging = true;
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const touch = e.touches[0];
+
+            startX = (touch.clientX - rect.left) * scaleX - offsetX;
+            startY = (touch.clientY - rect.top) * scaleY - offsetY;
+        });
+
+        window.addEventListener('touchend', () => isDragging = false);
+
+        canvas.addEventListener('touchmove', function(e) {
+            if (isDragging && userImg) {
+                e.preventDefault(); 
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const touch = e.touches[0];
+
+                offsetX = ((touch.clientX - rect.left) * scaleX) - startX;
+                offsetY = ((touch.clientY - rect.top) * scaleY) - startY;
+                drawCanvas();
+            }
+        }, { passive: false });
+
+        downloadBtn.addEventListener('click', function() {
+            if (!userImg) {
+                alert("দয়া করে আগে একটি ছবি নির্বাচন করুন!");
+                return;
+            }
+            const link = document.createElement('a');
+            link.download = `Haripur-High-School-${batchYear ? batchYear : 'Frame'}.png`;
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.click();
+        });
+
+        frameImg.onload = drawCanvas;
+    </script>
+</body>
+</html>
